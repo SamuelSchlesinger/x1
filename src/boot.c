@@ -33,29 +33,19 @@
 #include "main.h"
 #include "rcc.h"
 
-extern char _lma_data_addr;
-extern char _data_start;
-extern char _data_end;
-extern char _bss_start;
-extern char _bss_end;
-
 void boot_main(void);
 
 uint8_t boot_stack[BOOT_STACK_SIZE] __aligned(CPU_STACK_ALIGN);
-
-static void
-boot_copy_data(void)
-{
-    memcpy(&_data_start, &_lma_data_addr, &_data_end - &_data_start);
-}
 
 void
 boot_main(void)
 {
     cpu_intr_disable();
+#if 0
     boot_copy_data();
     flash_setup();
     rcc_setup();
+#endif
     gpio_setup();
     main();
 }

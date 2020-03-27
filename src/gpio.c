@@ -25,7 +25,7 @@
 
 #include "gpio.h"
 
-#define GPIO_C_BASE_ADDR 0x40020800
+#define GPIO_H_BASE_ADDR 0x50009000
 
 struct gpio_regs {
     uint32_t moder;
@@ -40,7 +40,7 @@ struct gpio_regs {
     uint32_t afrh;
 };
 
-static volatile struct gpio_regs *gpio_c_regs = (void *)GPIO_C_BASE_ADDR;
+static volatile struct gpio_regs *gpio_h_regs = (void *)GPIO_H_BASE_ADDR;
 
 static void
 gpio_compute_location(unsigned int io, unsigned int nr_bits,
@@ -99,19 +99,23 @@ gpio_set_output(volatile struct gpio_regs *regs, unsigned int io, bool high)
 void
 gpio_setup(void)
 {
-    gpio_set_af(gpio_c_regs, 6, 8, 1, 1);   /* UART6 TX */
-    gpio_set_af(gpio_c_regs, 7, 8, 1, 1);   /* UART6 RX */
-    gpio_set_af(gpio_c_regs, 13, 15, 0, 0); /* LED */
+    volatile uint32_t *rcc = (void *)0x50000000;
+
+    rcc[682] = 0x7ff;
+
+    gpio_set_af(gpio_h_regs, 7, 15, 0, 0);
+gpio_led_on();
+for (;;);
 }
 
 void
 gpio_led_on(void)
 {
-    gpio_set_output(gpio_c_regs, 13, false);
+    gpio_set_output(gpio_h_regs, 7, true);
 }
 
 void
 gpio_led_off(void)
 {
-    gpio_set_output(gpio_c_regs, 13, true);
+    gpio_set_output(gpio_h_regs, 7, false);
 }

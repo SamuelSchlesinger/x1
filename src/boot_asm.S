@@ -38,6 +38,9 @@
  *   readelf -aW x1 | grep "Entry point"
  */
 ASM_FUNC(boot_start)
+  ldr %r13, =boot_stack
+  add %r13, %r13, BOOT_STACK_SIZE
+#if 0
   mov %r0, %r13                     /* load boot stack in PSP */
   msr psp, %r0
   mov %r0, $2                       /* use PSP as stack pointer */
@@ -47,6 +50,7 @@ ASM_FUNC(boot_start)
   ldr %r0, =cpu_exc_stack           /* load exception stack in MSP */
   add %r0, %r0, CPU_EXC_STACK_SIZE
   msr msp, %r0
+#endif
   bl boot_clear_bss                 /* boot_clear_bss() */
   b boot_main                       /* goto boot_main */
 

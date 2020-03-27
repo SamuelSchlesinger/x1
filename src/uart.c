@@ -116,6 +116,7 @@ uart_irq_handler(void *arg)
 void
 uart_setup(void)
 {
+return;
     uint32_t divx100, mantissa, fraction;
 
     cbuf_init(&uart_cbuf, uart_buffer, sizeof(uart_buffer));
@@ -159,6 +160,7 @@ uart_write_byte(uint8_t byte)
 void
 uart_write(uint8_t byte)
 {
+return;
     if (byte == '\n') {
         uart_write_byte('\r');
     }
@@ -169,6 +171,7 @@ uart_write(uint8_t byte)
 int
 uart_read(uint8_t *byte)
 {
+return EBUSY;
     uint32_t primask;
     int error;
 
